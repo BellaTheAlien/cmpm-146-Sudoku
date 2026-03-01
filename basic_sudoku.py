@@ -53,7 +53,50 @@ def is_safe(board, row, col, num):
 
     return True
 
-# Example usage
-sudoku_board = generate_sudoku_board()
-for row in sudoku_board:
-    print(row)
+# adding the playable element to the board
+def print_board(board):
+    print("\n   0 1 2    3 4 5    6 7 8")
+    print("  +-------+-------+-------+")
+
+    for i, row in enumerate(board):
+        if i % 3 == 0 and i != 0:
+            print("  +-------+-------+-------+")
+        
+        row_start = f"{i} |"
+        for j, val in enumerate(row):
+            if j % 3 == 0 and j != 0:
+                row_start += " |"
+            row_start += (str(val) if val != 0 else ".") + " "
+        print(row_start)
+    print("  +-------+-------+-------+")
+
+def play_game():
+    board = generate_sudoku_board()
+
+    while True:
+        print_board(board)
+        print("Enter your move (row col number) or 'q' to quit:")
+
+        user_input = input("> ").strip().lower()
+
+        if user_input == 'q':
+            print("Thanks for playing!")
+            break
+
+        try:
+            row, col, num = map(int, user_input.split())
+
+            if not (0 <= row < 9 and 0 <= col < 9 and 1 <= num <= 9):
+                print("Invalid input.")
+                continue
+
+            if is_safe(board, row, col, num):
+                board[row][col] = num
+                print(f"Move accepted: {num} placed at ({row}, {col})")
+            else:
+                print(f"Move rejected: {num} cannot be placed at ({row}, {col})")
+        except ValueError:
+            print("Invalid input format. Please enter row, column, and number separated by spaces.")
+
+if __name__ == "__main__":
+    play_game()
